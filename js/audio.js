@@ -68,7 +68,7 @@ export class AudioManager {
     this.init();
     if (!this.context || this.muted) return;
     const now = performance.now();
-    const throttle = ['shot', 'impact', 'melee'].includes(name) ? 55 : 0;
+    const throttle = ['shot', 'impact', 'melee', 'spawn', 'spell-impact'].includes(name) ? 60 : 0;
     if (now - (this.lastSound.get(name) || 0) < throttle) return;
     this.lastSound.set(name, now);
     switch (name) {
@@ -123,6 +123,44 @@ export class AudioManager {
         break;
       case 'full':
         this.tone(760, 0.12, { type: 'sine', volume: 0.045, endFrequency: 980 });
+        break;
+      case 'spell-impact':
+        this.noise(0.26, 0.12);
+        this.tone(180, 0.24, { type: 'sawtooth', volume: 0.1, endFrequency: 55 });
+        break;
+      case 'lightning':
+        this.noise(0.3, 0.16);
+        this.tone(1600, 0.16, { type: 'square', volume: 0.055, endFrequency: 230 });
+        this.tone(760, 0.3, { type: 'sawtooth', volume: 0.06, delay: 0.04, endFrequency: 80 });
+        break;
+      case 'rocket':
+        this.tone(220, 0.5, { type: 'sawtooth', volume: 0.06, endFrequency: 80 });
+        this.noise(0.62, 0.19, 0.18);
+        this.tone(85, 0.5, { type: 'sawtooth', volume: 0.14, delay: 0.18, endFrequency: 32 });
+        break;
+      case 'freeze':
+        this.tone(880, 0.5, { type: 'sine', volume: 0.06, endFrequency: 1320 });
+        this.tone(1320, 0.42, { type: 'triangle', volume: 0.045, delay: 0.08, endFrequency: 660 });
+        break;
+      case 'rage':
+        this.tone(140, 0.42, { type: 'sawtooth', volume: 0.08, endFrequency: 280 });
+        this.tone(210, 0.32, { type: 'triangle', volume: 0.05, delay: 0.12, endFrequency: 420 });
+        break;
+      case 'jump':
+        this.tone(240, 0.18, { type: 'sine', volume: 0.045, endFrequency: 540 });
+        this.noise(0.1, 0.035, 0.08);
+        break;
+      case 'spawn':
+        this.tone(320, 0.1, { type: 'triangle', volume: 0.035, endFrequency: 520 });
+        break;
+      case 'crown':
+        this.tone(523, 0.16, { type: 'triangle', volume: 0.075 });
+        this.tone(784, 0.24, { type: 'triangle', volume: 0.065, delay: 0.09 });
+        break;
+      case 'king':
+        this.tone(196, 0.34, { type: 'sawtooth', volume: 0.055 });
+        this.tone(294, 0.36, { type: 'triangle', volume: 0.06, delay: 0.08 });
+        this.tone(392, 0.44, { type: 'triangle', volume: 0.055, delay: 0.17 });
         break;
     }
   }

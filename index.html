@@ -3,117 +3,288 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#07111f">
-  <meta name="description" content="Nexus Arena — un duel tactique temps réel original dans votre navigateur.">
-  <title>Nexus Arena — Duel tactique</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%2364e6ff' d='M32 3 57 18v28L32 61 7 46V18z'/%3E%3Cpath fill='%2307111f' d='m32 14 14 18-14 18-14-18z'/%3E%3C/svg%3E">
+  <meta name="theme-color" content="#071a34">
+  <meta name="description" content="Nexus Arena — un duel de cartes royal en temps réel. Composez votre deck, défendez vos tours et détruisez celle du Roi.">
+  <title>Nexus Arena — Duel de cartes royal</title>
+  <link rel="preload" href="assets/fonts/LilitaOne-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23ffcf4d' stroke='%23744113' stroke-width='4' d='M10 50 6 18l15 12L32 8l11 22 15-12-4 32Z'/%3E%3Cpath fill='%23f3ad24' stroke='%23744113' stroke-width='3' d='M11 48h42v8H11Z'/%3E%3Ccircle cx='32' cy='34' r='5' fill='%23e75480'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
-  <header class="topbar">
-    <a class="brand" href="./" aria-label="Nexus Arena, accueil">
-      <span class="brand-mark"><i></i></span>
-      <span><strong>NEXUS</strong><small>A R E N A</small></span>
-    </a>
-    <div class="season-tag"><span class="live-dot"></span> SIMULATION LOCALE <b>01</b></div>
-    <div class="top-actions">
-      <button id="help-btn" class="icon-btn" aria-label="Afficher les règles" title="Règles">?</button>
-      <button id="sound-btn" class="icon-btn" aria-label="Couper le son" title="Son (M)">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9v6h4l5 4V5L9 9H5Zm12-1c1.3 1.1 2 2.4 2 4s-.7 2.9-2 4m2.5-10.5c2 1.8 3 3.7 3 6.5s-1 4.7-3 6.5"/></svg>
-      </button>
-      <button id="pause-btn" class="icon-btn" aria-label="Mettre en pause" title="Pause (P)" disabled>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6v12M16 6v12"/></svg>
-      </button>
+<body data-screen="home">
+  <svg class="icon-sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-crown" viewBox="0 0 48 34"><path d="M4 27 2 8l11 9L24 3l11 14 11-9-2 19Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M6 28h36v4H6Z" fill="currentColor"/></symbol>
+      <symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="currentColor"/><path d="M12 5.5 14 10h4.5l-3.6 2.8 1.4 4.7-4.3-3-4.3 3 1.4-4.7L5.5 10H10Z" fill="#fff5c2" opacity=".9"/></symbol>
+      <symbol id="i-gem" viewBox="0 0 24 24"><path d="m12 2 8 7-8 13L4 9Z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 9h16M12 2 8 9l4 13 4-13Z" fill="none" stroke="#fff" stroke-width="1.1" opacity=".65"/></symbol>
+      <symbol id="i-sound" viewBox="0 0 24 24"><path d="M5 9v6h4l5 4V5L9 9Z" fill="currentColor"/><path d="M17 8.5c1.4 1.1 2.1 2.3 2.1 3.5s-.7 2.4-2.1 3.5M19.5 5.5c2.2 1.8 3.3 4 3.3 6.5s-1.1 4.7-3.3 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+      <symbol id="i-sound-off" viewBox="0 0 24 24"><path d="M5 9v6h4l5 4V5L9 9Z" fill="currentColor"/><path d="m17 9 5 6m0-6-5 6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 4h4v16H7zM14 4h4v16h-4z" fill="currentColor"/></symbol>
+      <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M14.5 4 6 12l8.5 8M6.5 12H21" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-swords" viewBox="0 0 24 24"><path d="m3 3 7 7m11-7-7 7M5 15l4-4m10 4-4-4M4 20l4-4m12 4-4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="m8 20-3-3M19 20l-3-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+      <symbol id="i-cards" viewBox="0 0 24 24"><rect x="8" y="3" width="12" height="17" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 7v14h11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="m14 8 2 3 2-3-2-3Z" fill="currentColor"/></symbol>
+      <symbol id="i-shop" viewBox="0 0 24 24"><path d="M4 9h16l-1 11H5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 9a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="13" r="1" fill="currentColor"/><circle cx="15" cy="13" r="1" fill="currentColor"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2 20 5v7c0 5-3.4 8.2-8 10-4.6-1.8-8-5-8-10V5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m12 6 1.6 3.4 3.7.4-2.8 2.5.8 3.6-3.3-1.9-3.3 1.9.8-3.6-2.8-2.5 3.7-.4Z" fill="currentColor"/></symbol>
+      <symbol id="i-chest" viewBox="0 0 24 24"><path d="M3 10h18v11H3Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 10V7a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v3M3 14h18" fill="none" stroke="currentColor" stroke-width="2"/><rect x="10.5" y="12" width="3" height="5" rx="1" fill="currentColor"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m5 5 14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M7 4h10v5a5 5 0 0 1-10 0Z" fill="currentColor"/><path d="M7 6H3v2a4 4 0 0 0 4 4M17 6h4v2a4 4 0 0 1-4 4M12 14v4M8 21h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+      <symbol id="i-gear" viewBox="0 0 24 24"><path d="m12 2 2 3 3-.6 1.2 2.8 3 1.2-.6 3 2.4 2.2-2.4 2.2.6 3-3 1.2-1.2 2.8-3-.6-2 3-2-3-3 .6L8 19.4 5 18.2l.6-3L3.2 13l2.4-2.2-.6-3 3-1.2L9.2 3.8l3 .6Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.2" fill="currentColor"/></symbol>
+      <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8v9H3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 20v-6h6v6" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+      <symbol id="i-retry" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v6h-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6Z" fill="currentColor"/></symbol>
+    </defs>
+  </svg>
+
+  <main id="home-screen" class="screen screen-home active" aria-hidden="false">
+    <div class="home-art" aria-hidden="true">
+      <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc8ff"/><stop offset=".45" stop-color="#3287d9"/><stop offset="1" stop-color="#173f7e"/></linearGradient>
+          <radialGradient id="sun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff8c7" stop-opacity=".95"/><stop offset=".45" stop-color="#ffe27a" stop-opacity=".45"/><stop offset="1" stop-color="#ffe27a" stop-opacity="0"/></radialGradient>
+          <linearGradient id="hillFar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#79c96b"/><stop offset="1" stop-color="#3b9050"/></linearGradient>
+          <linearGradient id="hillNear" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fbd55"/><stop offset="1" stop-color="#2f7c43"/></linearGradient>
+          <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ad86b"/><stop offset="1" stop-color="#3c9550"/></linearGradient>
+          <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe8ea"/><stop offset=".55" stop-color="#a9bcc6"/><stop offset="1" stop-color="#78909d"/></linearGradient>
+          <linearGradient id="royal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4b9ef0"/><stop offset="1" stop-color="#2358aa"/></linearGradient>
+          <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff1a6"/><stop offset=".5" stop-color="#ffc63c"/><stop offset="1" stop-color="#c97a0a"/></linearGradient>
+          <filter id="glow"><feGaussianBlur stdDeviation="9"/></filter>
+          <filter id="soft"><feGaussianBlur stdDeviation="2"/></filter>
+        </defs>
+        <rect width="1440" height="900" fill="url(#sky)"/>
+        <circle cx="1080" cy="180" r="240" fill="url(#sun)"/>
+        <g fill="#fff" opacity=".5">
+          <ellipse cx="220" cy="150" rx="130" ry="37"/><ellipse cx="300" cy="132" rx="82" ry="30"/><ellipse cx="130" cy="170" rx="70" ry="24"/>
+          <ellipse cx="820" cy="96" rx="100" ry="26"/><ellipse cx="885" cy="82" rx="60" ry="22"/>
+          <ellipse cx="1250" cy="286" rx="120" ry="28"/><ellipse cx="1320" cy="270" rx="64" ry="22"/>
+        </g>
+        <g opacity=".14" fill="#fff">
+          <path d="M0 330 180 250l180 80 190-70 190 80 220-66 230 86 250-70v160H0Z"/>
+        </g>
+        <path d="M0 520 180 390l180 90 210-120 210 110 230-100 230 110 200-65v400H0Z" fill="url(#hillFar)" opacity=".78"/>
+        <path d="M0 620 160 520l210 70 200-100 220 85 220-100 220 95 210-55v320H0Z" fill="url(#hillNear)"/>
+        <g opacity=".22" fill="#245a32">
+          <circle cx="180" cy="640" r="10"/><circle cx="250" cy="680" r="7"/><circle cx="1180" cy="650" r="11"/><circle cx="1240" cy="700" r="7"/><circle cx="760" cy="690" r="8"/>
+        </g>
+        <ellipse cx="720" cy="760" rx="560" ry="180" fill="#2a6b3c" opacity=".55"/>
+        <ellipse cx="720" cy="746" rx="505" ry="158" fill="url(#floor)"/>
+        <ellipse cx="720" cy="746" rx="505" ry="158" fill="none" stroke="#d8b25d" stroke-width="14" opacity=".65"/>
+        <ellipse cx="720" cy="746" rx="472" ry="138" fill="none" stroke="#f3d88d" stroke-width="4" opacity=".45"/>
+        <path d="M690 592c-52 20-76 57-72 96 26 13 58 19 102 19s76-6 102-19c4-39-20-76-72-96Z" fill="#4d8cc9" opacity=".6"/>
+        <path d="M650 640h140v34H650Z" fill="#b98b4f" opacity=".55"/>
+        <g opacity=".5" stroke="#f3d88d" stroke-width="3" fill="none">
+          <path d="M440 690h120M880 690h120M400 760h80M960 760h80"/>
+        </g>
+        <g transform="translate(190 420)">
+          <path d="M-68 260h136l-12-120H-56Z" fill="#7a909d"/><path d="M-56 140h112l-12-70H-44Z" fill="url(#stone)"/>
+          <path d="M-70 142 0 70l70 72Z" fill="url(#royal)"/><path d="M-78 146h156v18H-78Z" fill="#2c4e82"/>
+          <path d="M-54 260V190h108v70" fill="#5b7482" opacity=".55"/>
+          <rect x="-34" y="198" width="20" height="62" rx="10" fill="#243a54"/><rect x="14" y="198" width="20" height="62" rx="10" fill="#243a54"/>
+          <path d="M0 70V16" stroke="#6b4a26" stroke-width="7"/><path d="M2 18h48l-15 17 15 17H2Z" fill="#3d8de0"/>
+        </g>
+        <g transform="translate(1250 420) scale(-1 1)">
+          <path d="M-68 260h136l-12-120H-56Z" fill="#7a909d"/><path d="M-56 140h112l-12-70H-44Z" fill="url(#stone)"/>
+          <path d="M-70 142 0 70l70 72Z" fill="url(#royal)"/><path d="M-78 146h156v18H-78Z" fill="#2c4e82"/>
+          <path d="M-54 260V190h108v70" fill="#5b7482" opacity=".55"/>
+          <rect x="-34" y="198" width="20" height="62" rx="10" fill="#243a54"/><rect x="14" y="198" width="20" height="62" rx="10" fill="#243a54"/>
+          <path d="M0 70V16" stroke="#6b4a26" stroke-width="7"/><path d="M2 18h48l-15 17 15 17H2Z" fill="#e05252"/>
+        </g>
+        <g transform="translate(720 360)">
+          <ellipse cx="0" cy="352" rx="240" ry="54" fill="#1b5030" opacity=".35"/>
+          <path d="M-132 330h264l-18-170H-114Z" fill="#708b9a"/>
+          <path d="M-108 160h216l-16-110H-92Z" fill="url(#stone)"/>
+          <path d="M-128 164 0 44l128 120Z" fill="#2a67b9"/>
+          <path d="M-140 166H140v24H-140Z" fill="#1e457e"/>
+          <path d="M-84 330V238h168v92" fill="#4e6977" opacity=".55"/>
+          <rect x="-56" y="246" width="32" height="84" rx="16" fill="#1c324c"/><rect x="24" y="246" width="32" height="84" rx="16" fill="#1c324c"/>
+          <path d="M-30 246h60v84H-30Z" fill="#d9b45c" opacity=".8"/>
+          <path d="M0 44V-26" stroke="#6b4a26" stroke-width="10"/>
+          <path d="M4-24h88l-26 30 26 30H4Z" fill="#f4bd32"/>
+          <circle cx="0" cy="-32" r="12" fill="#ffdf7a" filter="url(#glow)"/>
+          <circle cx="0" cy="-32" r="6" fill="#fff3b0"/>
+        </g>
+        <g fill="#ffe89a" opacity=".7">
+          <circle cx="380" cy="520" r="3"/><circle cx="1080" cy="500" r="4"/><circle cx="640" cy="820" r="3"/><circle cx="860" cy="806" r="4"/><circle cx="280" cy="780" r="2.5"/><circle cx="1160" cy="760" r="3"/>
+        </g>
+      </svg>
+      <div class="home-haze"></div>
     </div>
-  </header>
 
-  <main class="game-layout">
-    <aside class="side-panel left-panel">
-      <section class="panel-card commander-card">
-        <div class="eyebrow">VOTRE COMMANDANT</div>
-        <div class="commander"><div class="avatar player-avatar">N<span></span></div><div><strong>NOVA</strong><small>Escouade astrale</small></div><span class="level-badge">NIV. 01</span></div>
-      </section>
-      <section id="card-inspector" class="panel-card inspector-card">
-        <div class="panel-heading"><span>BRIEFING</span><span class="tiny-label">TACTIQUE</span></div>
-        <div class="briefing-icon"><span>01</span><i></i><span>02</span><i></i><span>03</span></div>
-        <h2>Déployez. Défendez.<br>Dominez.</h2>
-        <p>Détruisez les relais adverses pour atteindre le noyau. Chaque carte coûte de l’élixir.</p>
-        <div class="mini-rule"><span class="keycap">1—4</span><span>Sélection rapide</span></div>
-        <div class="mini-rule"><span class="mouse-icon"></span><span>Clic ou glisser-déposer</span></div>
-      </section>
-      <section class="panel-card deck-overview">
-        <div class="panel-heading"><span>ESCOUADE ACTIVE</span><span class="tiny-label">8 CARTES</span></div>
-        <div id="deck-pips" class="deck-pips"></div>
-        <div class="deck-average"><span>Coût moyen</span><strong>3.4 <i></i></strong></div>
-      </section>
-    </aside>
+    <header class="home-top">
+      <button id="profile-btn" class="profile-plate" type="button" aria-label="Profil de Martin, niveau 13">
+        <span class="profile-level">13</span>
+        <span class="profile-copy"><strong>MARTIN</strong><small><svg class="icon"><use href="#i-trophy"/></svg> 4 862</small></span>
+        <span class="profile-chevron">›</span>
+      </button>
+      <div class="home-resources">
+        <div class="resource-pill gold"><svg class="icon"><use href="#i-coin"/></svg><span>12 480</span><button class="resource-add" data-resource="OR" type="button" aria-label="Ajouter de l’or"><svg class="icon"><use href="#i-plus"/></svg></button></div>
+        <div class="resource-pill gem"><svg class="icon"><use href="#i-gem"/></svg><span>348</span><button class="resource-add" data-resource="GEMMES" type="button" aria-label="Ajouter des gemmes"><svg class="icon"><use href="#i-plus"/></svg></button></div>
+        <button id="sound-btn" class="home-icon-btn" type="button" aria-label="Couper le son"><svg class="icon sound-on"><use href="#i-sound"/></svg><svg class="icon sound-off"><use href="#i-sound-off"/></svg></button>
+      </div>
+    </header>
 
-    <section class="battle-column" aria-label="Zone de jeu">
-      <div id="arena-shell" class="arena-shell">
-        <canvas id="arena" width="720" height="960" tabindex="0" role="application" aria-label="Arène de combat. Sélectionnez une carte puis cliquez sur votre territoire pour la déployer."></canvas>
-        <div class="arena-hud" aria-hidden="true">
-          <div class="combatant enemy-chip"><span class="status-dot"></span><span>ORA-7</span><b id="enemy-crowns">0</b><i class="crown-icon"></i></div>
-          <div class="match-clock"><small id="phase-label">DUEL</small><strong id="timer">3:00</strong></div>
-          <div class="combatant player-chip"><i class="crown-icon"></i><b id="player-crowns">0</b><span>NOVA</span><span class="status-dot"></span></div>
-        </div>
-        <div id="event-banner" class="event-banner" aria-live="polite"></div>
-        <div id="arena-toast" class="arena-toast" role="status"></div>
-        <div id="tutorial-tip" class="tutorial-tip"><span>01</span><p>Choisissez une carte, puis cliquez dans la zone lumineuse.</p><button aria-label="Fermer l’astuce">×</button></div>
-        <div id="pause-overlay" class="arena-overlay hidden">
-          <div class="overlay-card pause-card"><div class="eyebrow">SIMULATION SUSPENDUE</div><h2>PAUSE</h2><p>Le champ de bataille vous attend.</p><button id="resume-btn" class="primary-btn">REPRENDRE <span>▶</span></button><button id="quit-btn" class="text-btn">Abandonner le duel</button></div>
-        </div>
-        <div id="result-overlay" class="arena-overlay hidden">
-          <div class="overlay-card result-card"><div id="result-kicker" class="eyebrow">DUEL TERMINÉ</div><div id="result-emblem" class="result-emblem"></div><h2 id="result-title">VICTOIRE</h2><p id="result-subtitle"></p><div class="result-score"><div><strong id="result-player-score">0</strong><small>NOVA</small></div><span>—</span><div><strong id="result-enemy-score">0</strong><small>ORA-7</small></div></div><div class="result-stats"><span><b id="stat-cards">0</b> cartes jouées</span><span><b id="stat-damage">0</b> dégâts</span></div><button id="rematch-btn" class="primary-btn">REJOUER <span>↻</span></button><button id="menu-btn" class="text-btn">Retour aux paramètres</button></div>
-        </div>
+    <div class="home-center">
+      <div class="home-logo" aria-label="Nexus Arena">
+        <span class="logo-crown"><svg class="icon"><use href="#i-crown"/></svg></span>
+        <h1><span>NEXUS</span><strong>ARENA</strong></h1>
+        <p>DUEL DE CARTES ROYAL</p>
       </div>
 
-      <div class="hand-panel">
-        <div class="hand-topline"><span><i></i> VOTRE MAIN</span><small><kbd>1</kbd>—<kbd>4</kbd> POUR SÉLECTIONNER</small></div>
-        <div class="hand-row">
-          <div class="next-card-wrap"><span>SUIVANTE</span><div id="next-card" class="next-card"></div></div>
-          <div id="hand" class="hand" role="group" aria-label="Cartes en main"></div>
-        </div>
-        <div class="elixir-row"><span class="elixir-label">ÉLIXIR</span><div id="elixir-bar" class="elixir-bar" aria-label="Élixir"></div><strong id="elixir-value">5</strong><span class="elixir-max">/10</span></div>
+      <div class="home-mascot" aria-hidden="true">
+        <span class="mascot-glow"></span>
+        <img src="assets/cards/mega-knight.png" alt="">
       </div>
-    </section>
 
-    <aside class="side-panel right-panel">
-      <section class="panel-card telemetry-card">
-        <div class="panel-heading"><span>TÉLÉMÉTRIE</span><span class="signal-bars"><i></i><i></i><i></i></span></div>
-        <div class="opponent"><div class="avatar enemy-avatar">O<span></span></div><div><strong>ORA-7</strong><small id="ai-state">En attente du duel</small></div><span id="difficulty-badge" class="level-badge">STANDARD</span></div>
-        <div class="integrity-list">
-          <div class="integrity-item"><span>Relais gauche</span><div><i id="enemy-left-hp"></i></div><b id="enemy-left-value">100%</b></div>
-          <div class="integrity-item"><span>Noyau adverse</span><div><i id="enemy-core-hp"></i></div><b id="enemy-core-value">100%</b></div>
-          <div class="integrity-item"><span>Relais droit</span><div><i id="enemy-right-hp"></i></div><b id="enemy-right-value">100%</b></div>
+      <button id="battle-btn" class="battle-button" type="button">
+        <span class="battle-wing left"></span><span class="battle-wing right"></span>
+        <span class="battle-main">BATAILLE</span>
+        <span id="battle-arena-label" class="battle-sub">ARÈNE DU MÉGA CHEVALIER</span>
+      </button>
+
+      <div class="difficulty-row" role="group" aria-label="Difficulté de l’adversaire">
+        <span>ADVERSAIRE</span>
+        <button type="button" data-difficulty="recrue">RECRUE</button>
+        <button type="button" data-difficulty="standard" class="active">ORION</button>
+        <button type="button" data-difficulty="expert">TITAN</button>
+      </div>
+
+      <section class="home-deck" aria-label="Votre deck">
+        <div class="home-deck-head">
+          <span>VOTRE DECK</span>
+          <div class="average-pill"><span class="elixir-mini"></span><b id="home-deck-avg">3.9</b></div>
         </div>
+        <div id="home-deck-cards" class="mini-deck"></div>
+        <button id="edit-deck-btn" class="edit-deck-btn" type="button">
+          <svg class="icon"><use href="#i-cards"/></svg> MODIFIER LE DECK
+        </button>
       </section>
-      <section class="panel-card log-card">
-        <div class="panel-heading"><span>FLUX TACTIQUE</span><span class="live-dot"></span></div>
-        <div id="battle-log" class="battle-log"><div class="log-empty"><span class="scan-icon"></span><p>Aucune activité.<br>Le flux s’activera au lancement.</p></div></div>
-      </section>
-      <section class="panel-card objective-card"><span class="objective-icon"></span><div><div class="eyebrow">OBJECTIF PRIMAIRE</div><p>Détruisez le <strong>noyau ennemi</strong> pour remporter immédiatement le duel.</p></div></section>
-    </aside>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Navigation principale">
+      <button class="nav-item active" data-nav="battle" type="button"><svg class="icon"><use href="#i-swords"/></svg><span>COMBAT</span></button>
+      <button class="nav-item" data-nav="collection" type="button"><svg class="icon"><use href="#i-cards"/></svg><span>CARTES</span></button>
+      <button class="nav-item" data-nav="shop" type="button"><svg class="icon"><use href="#i-shop"/></svg><span>BOUTIQUE</span></button>
+      <button class="nav-item" data-nav="clan" type="button"><svg class="icon"><use href="#i-shield"/></svg><span>CLAN</span></button>
+      <button class="nav-item" data-nav="events" type="button"><svg class="icon"><use href="#i-chest"/></svg><span>ÉVÉNEMENTS</span></button>
+    </nav>
   </main>
 
-  <footer class="footer"><span>NEXUS SYSTEMS <b>•</b> BUILD 1.0</span><span><i></i> 100% ORIGINAL · AUCUN TÉLÉCHARGEMENT</span><span>LOCALHOST:8000</span></footer>
+  <section id="collection-screen" class="screen screen-collection" aria-hidden="true">
+    <header class="collection-top">
+      <button id="collection-back" class="round-btn" type="button" aria-label="Retour à l’accueil"><svg class="icon"><use href="#i-arrow-left"/></svg></button>
+      <div class="collection-title"><span>COLLECTION</span><h1>CARTES</h1></div>
+      <div class="collection-count"><b id="collection-count">43</b><span>/ 43</span></div>
+    </header>
+    <div class="collection-body">
+      <div class="collection-filters">
+        <div id="rarity-filters" class="filter-group" role="group" aria-label="Filtrer par rareté">
+          <button class="filter-chip active" type="button" data-rarity="all">TOUTES</button>
+          <button class="filter-chip" type="button" data-rarity="common">COMMUNES</button>
+          <button class="filter-chip" type="button" data-rarity="rare">RARES</button>
+          <button class="filter-chip" type="button" data-rarity="epic">ÉPIQUES</button>
+          <button class="filter-chip" type="button" data-rarity="legendary">LÉGENDAIRES</button>
+        </div>
+        <label class="type-filter"><span>TYPE</span><select id="type-filter"><option value="all">Tous</option><option value="troop">Troupes</option><option value="building">Bâtiments</option><option value="spell">Sorts</option></select></label>
+      </div>
+      <p id="collection-hint" class="collection-hint">Touchez une carte pour l’inspecter et composer votre deck de 8 cartes.</p>
+      <div id="card-grid" class="card-grid"></div>
+      <div id="empty-filter" class="empty-filter hidden"><span>?</span><p>Aucune carte ne correspond à ce filtre.</p><button id="reset-filters" class="gold-btn small" type="button">TOUT AFFICHER</button></div>
+    </div>
+    <aside class="deck-dock" aria-label="Deck de combat">
+      <div class="deck-dock-head">
+        <div class="deck-dock-title"><span>DECK DE COMBAT</span><b id="deck-count">8/8</b></div>
+        <div class="deck-dock-actions">
+          <div class="average-pill"><span class="elixir-mini"></span><b id="deck-average">3.9</b></div>
+          <button id="auto-deck" class="auto-deck-btn" type="button">DECK AUTO</button>
+        </div>
+      </div>
+      <div id="deck-slots" class="deck-slots"></div>
+      <p id="deck-status" class="deck-status">Prêt pour la bataille</p>
+    </aside>
+  </section>
 
-  <div id="start-overlay" class="start-overlay">
-    <div class="start-card">
-      <div class="start-brand"><span class="large-mark"><i></i></span><span>UNE SIMULATION NEXUS</span></div>
-      <div class="eyebrow start-eyebrow">DUEL TACTIQUE · TEMPS RÉEL · SOLO</div>
-      <h1>NEXUS<br><span>ARENA</span></h1>
-      <p class="start-description">Votre escouade. Votre élixir. Votre stratégie.<br>Percez les défenses d’ORA-7 et détruisez son noyau.</p>
-      <div class="feature-row"><div><span class="feature-icon deploy-icon"></span><b>DÉPLOYEZ</b><small>8 cartes uniques</small></div><div><span class="feature-icon adapt-icon"></span><b>ADAPTEZ</b><small>Une IA autonome</small></div><div><span class="feature-icon destroy-icon"></span><b>DÉTRUISEZ</b><small>3 structures ennemies</small></div></div>
-      <div class="difficulty-select"><label>PROTOCOLE ADVERSE</label><div class="segmented" role="group" aria-label="Difficulté"><button data-difficulty="recrue">RECRUE</button><button data-difficulty="standard" class="active">STANDARD</button><button data-difficulty="expert">EXPERT</button></div></div>
-      <button id="start-btn" class="primary-btn start-btn"><span>ENTRER DANS L’ARÈNE</span><i>→</i></button>
-      <div class="start-foot"><span><i></i> PARTIE LOCALE · AUCUN COMPTE</span><span>≈ 3 MIN</span></div>
+  <section id="battle-screen" class="screen screen-battle" aria-hidden="true">
+    <header class="battle-top">
+      <div class="battle-side enemy-side">
+        <div class="battle-avatar enemy-avatar"><span>O</span></div>
+        <div class="battle-identity"><strong id="enemy-name">ORION</strong><small id="enemy-state">Observe l’arène</small></div>
+        <div class="crown-counter enemy-crowns"><svg class="icon"><use href="#i-crown"/></svg><b id="enemy-crowns">0</b></div>
+      </div>
+      <div class="battle-clock" id="battle-clock">
+        <span id="phase-label">DUEL</span>
+        <strong id="timer">3:00</strong>
+      </div>
+      <div class="battle-side player-side">
+        <div class="battle-avatar player-avatar"><span>M</span></div>
+        <div class="battle-identity"><strong>MARTIN</strong><small id="player-state">Votre arène</small></div>
+        <div class="crown-counter player-crowns"><svg class="icon"><use href="#i-crown"/></svg><b id="player-crowns">0</b></div>
+      </div>
+      <button id="pause-btn" class="pause-btn" type="button" aria-label="Mettre en pause"><svg class="icon"><use href="#i-pause"/></svg></button>
+    </header>
+
+    <div class="battle-stage">
+      <div id="arena-shell" class="arena-shell">
+        <canvas id="arena" width="720" height="960" tabindex="0" role="application" aria-label="Arène de combat. Sélectionnez une carte puis touchez votre territoire pour la déployer."></canvas>
+        <div id="enemy-play" class="enemy-play" aria-live="polite"></div>
+        <div id="event-banner" class="event-banner" aria-live="polite"></div>
+        <div id="arena-toast" class="arena-toast" role="status"></div>
+        <div id="battle-tip" class="battle-tip"><span>!</span><p>Glissez une carte sur votre terrain pour la déployer.</p><button id="dismiss-tip" type="button" aria-label="Fermer l’astuce">×</button></div>
+      </div>
+    </div>
+
+    <div class="battle-bottom">
+      <div class="battle-elixir">
+        <span class="elixir-label">ÉLIXIR</span>
+        <div id="elixir-bar" class="elixir-bar" aria-label="Élixir"></div>
+        <strong id="elixir-value">5</strong>
+      </div>
+      <div class="hand-dock">
+        <div class="next-wrap"><span>SUIVANTE</span><div id="next-card" class="next-card"></div></div>
+        <div id="hand" class="hand" role="group" aria-label="Cartes en main"></div>
+      </div>
+    </div>
+
+    <div id="pause-overlay" class="battle-overlay hidden">
+      <div class="overlay-card pause-card">
+        <span class="overlay-kicker">COMBAT SUSPENDU</span>
+        <h2>PAUSE</h2>
+        <p>Reprenez le duel quand vous êtes prêt.</p>
+        <button id="resume-btn" class="gold-btn" type="button">REPRENDRE</button>
+        <button id="quit-btn" class="ghost-btn" type="button">QUITTER LA BATAILLE</button>
+      </div>
+    </div>
+
+    <div id="result-overlay" class="battle-overlay hidden">
+      <div id="result-card" class="overlay-card result-card">
+        <span id="result-kicker" class="overlay-kicker">COMBAT TERMINÉ</span>
+        <div id="result-crowns" class="result-crowns"></div>
+        <h2 id="result-title">VICTOIRE</h2>
+        <p id="result-subtitle"></p>
+        <div class="result-score"><span id="result-player-score">0</span><i>—</i><span id="result-enemy-score">0</span></div>
+        <div class="result-stats"><div><b id="stat-cards">0</b><span>cartes jouées</span></div><div><b id="stat-damage">0</b><span>dégâts infligés</span></div></div>
+        <button id="rematch-btn" class="gold-btn" type="button">REJOUER</button>
+        <button id="menu-btn" class="ghost-btn" type="button">RETOUR À L’ACCUEIL</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="card-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-card-name">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="card-sheet">
+      <button id="modal-close" class="round-btn modal-close" type="button" aria-label="Fermer"><svg class="icon"><use href="#i-close"/></svg></button>
+      <div id="modal-hero" class="modal-hero"><img id="modal-image" alt=""><span id="modal-rarity" class="rarity-label"></span></div>
+      <div class="modal-info">
+        <div class="modal-heading"><div><span id="modal-type" class="modal-type"></span><h2 id="modal-card-name"></h2></div><span id="modal-cost" class="big-cost"><i></i></span></div>
+        <p id="modal-role" class="modal-role"></p>
+        <p id="modal-description" class="modal-description"></p>
+        <div id="modal-stats" class="modal-stats"></div>
+        <p id="modal-note" class="modal-note"></p>
+        <button id="modal-action" class="gold-btn" type="button">AJOUTER AU DECK</button>
+      </div>
     </div>
   </div>
 
-  <div id="help-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="help-title">
-    <div class="modal-card"><button id="close-help" class="modal-close" aria-label="Fermer">×</button><div class="eyebrow">MANUEL DE TERRAIN</div><h2 id="help-title">COMMENT JOUER</h2><div class="help-grid"><section><span>01</span><div><h3>Déployez votre escouade</h3><p>Cliquez sur une carte (ou utilisez les touches 1 à 4), puis sur votre moitié de terrain. Vous pouvez aussi la glisser directement.</p></div></section><section><span>02</span><div><h3>Gérez votre élixir</h3><p>Il se recharge avec le temps, deux fois plus vite lors de la dernière minute. Une carte jouée est remplacée par la suivante du deck.</p></div></section><section><span>03</span><div><h3>Brisez leurs défenses</h3><p>Les unités avancent et attaquent seules. Détruire un relais élargit votre zone de déploiement. Détruire le noyau met fin au duel.</p></div></section><section><span>04</span><div><h3>Remportez le duel</h3><p>À la fin des 3 minutes, le camp avec le plus de relais gagne. En cas d’égalité, la prochaine tour détruite gagne en mort subite.</p></div></section></div><div class="help-notes"><p><strong>Comète</strong> et <strong>Pulse</strong> peuvent cibler toute l’arène. Les unités terrestres empruntent les ponts ; l’Aéron vole.</p><p><kbd>P</kbd> Pause &nbsp; <kbd>M</kbd> Son &nbsp; <kbd>Échap</kbd> Annuler / pause</p></div><button id="help-ok" class="primary-btn">COMPRIS</button></div>
-  </div>
+  <div id="global-toast" class="global-toast" role="status"></div>
 
   <script type="module" src="js/main.js"></script>
 </body>
