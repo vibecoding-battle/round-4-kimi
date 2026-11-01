@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="Nexus Arena — un duel tactique temps réel original dans votre navigateur.">
+  <title>Nexus Arena — Duel tactique</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%2364e6ff' d='M32 3 57 18v28L32 61 7 46V18z'/%3E%3Cpath fill='%2307111f' d='m32 14 14 18-14 18-14-18z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Nexus Arena, accueil">
+      <span class="brand-mark"><i></i></span>
+      <span><strong>NEXUS</strong><small>A R E N A</small></span>
+    </a>
+    <div class="season-tag"><span class="live-dot"></span> SIMULATION LOCALE <b>01</b></div>
+    <div class="top-actions">
+      <button id="help-btn" class="icon-btn" aria-label="Afficher les règles" title="Règles">?</button>
+      <button id="sound-btn" class="icon-btn" aria-label="Couper le son" title="Son (M)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9v6h4l5 4V5L9 9H5Zm12-1c1.3 1.1 2 2.4 2 4s-.7 2.9-2 4m2.5-10.5c2 1.8 3 3.7 3 6.5s-1 4.7-3 6.5"/></svg>
+      </button>
+      <button id="pause-btn" class="icon-btn" aria-label="Mettre en pause" title="Pause (P)" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6v12M16 6v12"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="game-layout">
+    <aside class="side-panel left-panel">
+      <section class="panel-card commander-card">
+        <div class="eyebrow">VOTRE COMMANDANT</div>
+        <div class="commander"><div class="avatar player-avatar">N<span></span></div><div><strong>NOVA</strong><small>Escouade astrale</small></div><span class="level-badge">NIV. 01</span></div>
+      </section>
+      <section id="card-inspector" class="panel-card inspector-card">
+        <div class="panel-heading"><span>BRIEFING</span><span class="tiny-label">TACTIQUE</span></div>
+        <div class="briefing-icon"><span>01</span><i></i><span>02</span><i></i><span>03</span></div>
+        <h2>Déployez. Défendez.<br>Dominez.</h2>
+        <p>Détruisez les relais adverses pour atteindre le noyau. Chaque carte coûte de l’élixir.</p>
+        <div class="mini-rule"><span class="keycap">1—4</span><span>Sélection rapide</span></div>
+        <div class="mini-rule"><span class="mouse-icon"></span><span>Clic ou glisser-déposer</span></div>
+      </section>
+      <section class="panel-card deck-overview">
+        <div class="panel-heading"><span>ESCOUADE ACTIVE</span><span class="tiny-label">8 CARTES</span></div>
+        <div id="deck-pips" class="deck-pips"></div>
+        <div class="deck-average"><span>Coût moyen</span><strong>3.4 <i></i></strong></div>
+      </section>
+    </aside>
+
+    <section class="battle-column" aria-label="Zone de jeu">
+      <div id="arena-shell" class="arena-shell">
+        <canvas id="arena" width="720" height="960" tabindex="0" role="application" aria-label="Arène de combat. Sélectionnez une carte puis cliquez sur votre territoire pour la déployer."></canvas>
+        <div class="arena-hud" aria-hidden="true">
+          <div class="combatant enemy-chip"><span class="status-dot"></span><span>ORA-7</span><b id="enemy-crowns">0</b><i class="crown-icon"></i></div>
+          <div class="match-clock"><small id="phase-label">DUEL</small><strong id="timer">3:00</strong></div>
+          <div class="combatant player-chip"><i class="crown-icon"></i><b id="player-crowns">0</b><span>NOVA</span><span class="status-dot"></span></div>
+        </div>
+        <div id="event-banner" class="event-banner" aria-live="polite"></div>
+        <div id="arena-toast" class="arena-toast" role="status"></div>
+        <div id="tutorial-tip" class="tutorial-tip"><span>01</span><p>Choisissez une carte, puis cliquez dans la zone lumineuse.</p><button aria-label="Fermer l’astuce">×</button></div>
+        <div id="pause-overlay" class="arena-overlay hidden">
+          <div class="overlay-card pause-card"><div class="eyebrow">SIMULATION SUSPENDUE</div><h2>PAUSE</h2><p>Le champ de bataille vous attend.</p><button id="resume-btn" class="primary-btn">REPRENDRE <span>▶</span></button><button id="quit-btn" class="text-btn">Abandonner le duel</button></div>
+        </div>
+        <div id="result-overlay" class="arena-overlay hidden">
+          <div class="overlay-card result-card"><div id="result-kicker" class="eyebrow">DUEL TERMINÉ</div><div id="result-emblem" class="result-emblem"></div><h2 id="result-title">VICTOIRE</h2><p id="result-subtitle"></p><div class="result-score"><div><strong id="result-player-score">0</strong><small>NOVA</small></div><span>—</span><div><strong id="result-enemy-score">0</strong><small>ORA-7</small></div></div><div class="result-stats"><span><b id="stat-cards">0</b> cartes jouées</span><span><b id="stat-damage">0</b> dégâts</span></div><button id="rematch-btn" class="primary-btn">REJOUER <span>↻</span></button><button id="menu-btn" class="text-btn">Retour aux paramètres</button></div>
+        </div>
+      </div>
+
+      <div class="hand-panel">
+        <div class="hand-topline"><span><i></i> VOTRE MAIN</span><small><kbd>1</kbd>—<kbd>4</kbd> POUR SÉLECTIONNER</small></div>
+        <div class="hand-row">
+          <div class="next-card-wrap"><span>SUIVANTE</span><div id="next-card" class="next-card"></div></div>
+          <div id="hand" class="hand" role="group" aria-label="Cartes en main"></div>
+        </div>
+        <div class="elixir-row"><span class="elixir-label">ÉLIXIR</span><div id="elixir-bar" class="elixir-bar" aria-label="Élixir"></div><strong id="elixir-value">5</strong><span class="elixir-max">/10</span></div>
+      </div>
+    </section>
+
+    <aside class="side-panel right-panel">
+      <section class="panel-card telemetry-card">
+        <div class="panel-heading"><span>TÉLÉMÉTRIE</span><span class="signal-bars"><i></i><i></i><i></i></span></div>
+        <div class="opponent"><div class="avatar enemy-avatar">O<span></span></div><div><strong>ORA-7</strong><small id="ai-state">En attente du duel</small></div><span id="difficulty-badge" class="level-badge">STANDARD</span></div>
+        <div class="integrity-list">
+          <div class="integrity-item"><span>Relais gauche</span><div><i id="enemy-left-hp"></i></div><b id="enemy-left-value">100%</b></div>
+          <div class="integrity-item"><span>Noyau adverse</span><div><i id="enemy-core-hp"></i></div><b id="enemy-core-value">100%</b></div>
+          <div class="integrity-item"><span>Relais droit</span><div><i id="enemy-right-hp"></i></div><b id="enemy-right-value">100%</b></div>
+        </div>
+      </section>
+      <section class="panel-card log-card">
+        <div class="panel-heading"><span>FLUX TACTIQUE</span><span class="live-dot"></span></div>
+        <div id="battle-log" class="battle-log"><div class="log-empty"><span class="scan-icon"></span><p>Aucune activité.<br>Le flux s’activera au lancement.</p></div></div>
+      </section>
+      <section class="panel-card objective-card"><span class="objective-icon"></span><div><div class="eyebrow">OBJECTIF PRIMAIRE</div><p>Détruisez le <strong>noyau ennemi</strong> pour remporter immédiatement le duel.</p></div></section>
+    </aside>
+  </main>
+
+  <footer class="footer"><span>NEXUS SYSTEMS <b>•</b> BUILD 1.0</span><span><i></i> 100% ORIGINAL · AUCUN TÉLÉCHARGEMENT</span><span>LOCALHOST:8000</span></footer>
+
+  <div id="start-overlay" class="start-overlay">
+    <div class="start-card">
+      <div class="start-brand"><span class="large-mark"><i></i></span><span>UNE SIMULATION NEXUS</span></div>
+      <div class="eyebrow start-eyebrow">DUEL TACTIQUE · TEMPS RÉEL · SOLO</div>
+      <h1>NEXUS<br><span>ARENA</span></h1>
+      <p class="start-description">Votre escouade. Votre élixir. Votre stratégie.<br>Percez les défenses d’ORA-7 et détruisez son noyau.</p>
+      <div class="feature-row"><div><span class="feature-icon deploy-icon"></span><b>DÉPLOYEZ</b><small>8 cartes uniques</small></div><div><span class="feature-icon adapt-icon"></span><b>ADAPTEZ</b><small>Une IA autonome</small></div><div><span class="feature-icon destroy-icon"></span><b>DÉTRUISEZ</b><small>3 structures ennemies</small></div></div>
+      <div class="difficulty-select"><label>PROTOCOLE ADVERSE</label><div class="segmented" role="group" aria-label="Difficulté"><button data-difficulty="recrue">RECRUE</button><button data-difficulty="standard" class="active">STANDARD</button><button data-difficulty="expert">EXPERT</button></div></div>
+      <button id="start-btn" class="primary-btn start-btn"><span>ENTRER DANS L’ARÈNE</span><i>→</i></button>
+      <div class="start-foot"><span><i></i> PARTIE LOCALE · AUCUN COMPTE</span><span>≈ 3 MIN</span></div>
+    </div>
+  </div>
+
+  <div id="help-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="help-title">
+    <div class="modal-card"><button id="close-help" class="modal-close" aria-label="Fermer">×</button><div class="eyebrow">MANUEL DE TERRAIN</div><h2 id="help-title">COMMENT JOUER</h2><div class="help-grid"><section><span>01</span><div><h3>Déployez votre escouade</h3><p>Cliquez sur une carte (ou utilisez les touches 1 à 4), puis sur votre moitié de terrain. Vous pouvez aussi la glisser directement.</p></div></section><section><span>02</span><div><h3>Gérez votre élixir</h3><p>Il se recharge avec le temps, deux fois plus vite lors de la dernière minute. Une carte jouée est remplacée par la suivante du deck.</p></div></section><section><span>03</span><div><h3>Brisez leurs défenses</h3><p>Les unités avancent et attaquent seules. Détruire un relais élargit votre zone de déploiement. Détruire le noyau met fin au duel.</p></div></section><section><span>04</span><div><h3>Remportez le duel</h3><p>À la fin des 3 minutes, le camp avec le plus de relais gagne. En cas d’égalité, la prochaine tour détruite gagne en mort subite.</p></div></section></div><div class="help-notes"><p><strong>Comète</strong> et <strong>Pulse</strong> peuvent cibler toute l’arène. Les unités terrestres empruntent les ponts ; l’Aéron vole.</p><p><kbd>P</kbd> Pause &nbsp; <kbd>M</kbd> Son &nbsp; <kbd>Échap</kbd> Annuler / pause</p></div><button id="help-ok" class="primary-btn">COMPRIS</button></div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
