@@ -1,80 +1,82 @@
 # Nexus Arena
 
-Un duel tactique en temps réel, original et jouable en solo dans le navigateur. Déployez votre escouade, gérez votre élixir et détruisez le noyau d’ORA-7 avant qu’il ne détruise le vôtre.
+**Kimi**'s entry for Round 4 of [Vibe Coding Battle](https://github.com/vibecoding-battle).
 
-## Lancer le jeu
+An original real-time tactical duel you play solo in the browser. Deploy your squad, manage your elixir and destroy ORA-7's core before it destroys yours.
 
-**Prérequis : Node.js 18 ou plus récent.** Aucune installation de dépendances n’est nécessaire.
+## Run it
+
+**You need Node.js 18 or newer.** There are no dependencies to install.
 
 ```bash
 npm start
 ```
 
-Ouvrez ensuite **http://localhost:8000**.
+Then open **http://localhost:8000**.
 
-Autres options :
+Other options:
 
 ```bash
-# Démarrage direct
+# Start directly
 node server.mjs
 
-# Autre port
+# Use another port
 node server.mjs --port=8080
 
-# Alternative sans Node, avec Python
+# No Node? Use Python
 python -m http.server 8000
 ```
 
-Le jeu fonctionne avec les versions récentes de Chromium, Firefox et Safari, sur ordinateur et sur écran tactile.
+The game works on recent versions of Chromium, Firefox and Safari, on desktop and touch screens.
 
-## Comment jouer
+## How to play
 
-- Cliquez sur une carte puis sur votre territoire, ou glissez-la directement dans l’arène.
-- Les touches **1 à 4** sélectionnent les cartes de votre main.
-- **P** met le jeu en pause, **M** active ou coupe le son, **Échap** annule la sélection ou met en pause.
-- Chaque carte coûte de l’élixir, qui se recharge automatiquement. Après chaque déploiement, la carte suivante du deck entre dans votre main.
-- Les unités terrestres utilisent les ponts ; l’Aéron survole la rivière. Les sorts Comète et Pulse peuvent cibler toute l’arène.
-- Détruire un relais adverse élargit votre zone de déploiement sur cette voie et active le noyau ennemi.
-- La destruction du noyau donne une victoire immédiate. Sinon, le camp ayant détruit le plus de tours gagne à la fin des **3 minutes**.
-- La dernière minute est en **double élixir**. En cas d’égalité, une **mort subite de 60 secondes** a lieu : la prochaine tour gagne. Si l’égalité persiste, l’intégrité restante des tours départage les camps.
+- Click a card and then your territory, or drag it straight into the arena.
+- Keys **1 to 4** select the cards in your hand.
+- **P** pauses, **M** toggles sound, **Esc** cancels the selection or pauses.
+- Each card costs elixir, which refills on its own. After each deployment, the next card in the deck enters your hand.
+- Ground units use the bridges, and the Aéron flies over the river. The Comète and Pulse spells can target the whole arena.
+- Destroying an enemy relay widens your deployment zone on that lane and activates the enemy core.
+- Destroying the core wins the game on the spot. Otherwise, the side that destroyed the most towers wins after **3 minutes**.
+- The last minute is **double elixir**. A tie triggers **60 seconds of sudden death**, where the next tower wins. If it's still tied, remaining tower integrity decides.
 
-## Les huit cartes
+## The eight cards
 
-| Carte | Coût | Rôle |
+| Card | Cost | Role |
 | --- | ---: | --- |
-| Gardien | 3 | Combattant polyvalent au corps à corps |
-| Essaim | 2 | Trois unités terrestres rapides |
-| Volt | 4 | Tir à distance, capable de toucher les cibles volantes |
-| Aéron | 3 | Unité volante à distance |
-| Atlas | 5 | Colosse très résistant qui cible les structures |
-| Comète | 4 | Frappe de zone à dégâts élevés |
-| Bastion | 4 | Tourelle défensive temporaire de 30 secondes |
-| Pulse | 2 | Dégâts de zone et ralentissement |
+| Gardien | 3 | All-round melee fighter |
+| Essaim | 2 | Three fast ground units |
+| Volt | 4 | Ranged attacker that can hit flying targets |
+| Aéron | 3 | Ranged flying unit |
+| Atlas | 5 | Very tough colossus that targets structures |
+| Comète | 4 | High-damage area strike |
+| Bastion | 4 | Defensive turret that lasts 30 seconds |
+| Pulse | 2 | Area damage and slow |
 
-Trois protocoles d’IA sont disponibles : **Recrue**, **Standard** et **Expert**. L’adversaire possède le même élixir et le même deck que le joueur ; il défend les menaces, choisit des contres, constitue des assauts et utilise ses sorts tactiquement.
+There are three AI protocols: **Recrue**, **Standard** and **Expert**. The opponent has the same elixir and the same deck as you. It defends against threats, picks counters, builds up attacks and uses its spells tactically.
 
-## Choix techniques
+## Technical choices
 
-- **HTML, CSS et JavaScript ES modules**, sans framework ni dépendance externe.
-- **Canvas 2D** pour l’arène, les unités, l’eau, les projectiles et les particules.
-- Simulation à pas fixe de **60 Hz**, indépendante de la fréquence d’affichage.
-- **Web Audio API** pour les sons synthétisés en temps réel.
-- Serveur statique minimal avec les modules natifs de Node.js.
-- Interface responsive, contrôles souris, clavier et tactiles.
+- **HTML, CSS and JavaScript ES modules**, with no framework or external dependency.
+- **Canvas 2D** for the arena, units, water, projectiles and particles.
+- Fixed-step simulation at **60 Hz**, independent of the display refresh rate.
+- **Web Audio API** for sounds synthesized in real time.
+- A minimal static server built on Node.js native modules.
+- Responsive interface with mouse, keyboard and touch controls.
 
-Tous les noms, visuels vectoriels et sons sont originaux et générés par le code. Aucun asset, nom ou son de Supercell n’est utilisé. Aucun compte, service réseau ou téléchargement d’asset n’est requis.
+All names, vector visuals and sounds are original and generated by code. No Supercell asset, name or sound is used. No account, network service or asset download is required.
 
 ## Structure
 
 ```text
-index.html          Interface et écrans de jeu
-styles.css          Design responsive
-js/cards.js         Arène, statistiques et visuels SVG des cartes
-js/game.js          Combat, deck, élixir, règles et IA
-js/renderer.js      Rendu Canvas et effets visuels
-js/audio.js         Sons procéduraux
-js/main.js          Contrôles, HUD et boucle principale
-server.mjs          Serveur local
+index.html          Interface and game screens
+styles.css          Responsive design
+js/cards.js         Arena, stats and SVG card visuals
+js/game.js          Combat, deck, elixir, rules and AI
+js/renderer.js      Canvas rendering and visual effects
+js/audio.js         Procedural sounds
+js/main.js          Controls, HUD and main loop
+server.mjs          Local server
 ```
 
-Le projet a été vérifié dans Chromium sur des formats ordinateur et mobile, avec des simulations complètes de partie et des parcours réels de déploiement, pause, mort subite, victoire, défaite et revanche.
+The project was checked in Chromium at desktop and mobile sizes, with full simulated matches and real runs through deployment, pause, sudden death, victory, defeat and rematch.
